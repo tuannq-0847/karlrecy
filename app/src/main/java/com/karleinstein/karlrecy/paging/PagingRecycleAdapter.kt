@@ -4,11 +4,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
+import com.karleinstein.karlrecy.BaseDiffUtil
 import com.karleinstein.karlrecy.BaseViewHolder
 import com.karleinstein.karlrecy.RecyclerAdapterListener
 
 abstract class PagingRecycleAdapter<Item : Any>(
-    diffCallback: DiffUtil.ItemCallback<Item>
+    diffCallback: DiffUtil.ItemCallback<Item> = BaseDiffUtil()
 ) : PagingDataAdapter<Item, BaseViewHolder>(diffCallback),
     RecyclerAdapterListener<Item> {
 
@@ -23,8 +24,10 @@ abstract class PagingRecycleAdapter<Item : Any>(
             LayoutInflater.from(
                 parent.context
             ).inflate(viewType, parent, false)
-        )
+        ).apply { bindFirstTime(this) }
     }
+
+    override fun bindFirstTime(baseViewHolder: BaseViewHolder) {}
 
     override fun getItemViewType(position: Int): Int {
         return buildLayoutRes(position)

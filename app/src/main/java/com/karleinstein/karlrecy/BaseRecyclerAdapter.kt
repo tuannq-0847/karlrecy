@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.AsyncDifferConfig
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -18,7 +17,7 @@ abstract class BaseRecyclerAdapter<Item : Any>(
     AsyncDifferConfig.Builder<Item>(callBack)
         .setBackgroundThreadExecutor(Executors.newSingleThreadExecutor())
         .build()
-),RecyclerAdapterListener<Item> {
+), RecyclerAdapterListener<Item> {
 
     protected var dataRaw: List<Item> = listOf()
     private val states = mutableMapOf<Item, Boolean>()
@@ -36,7 +35,7 @@ abstract class BaseRecyclerAdapter<Item : Any>(
             }
     }
 
-    protected open fun bindFirstTime(baseViewHolder: BaseViewHolder) {}
+    override fun bindFirstTime(baseViewHolder: BaseViewHolder) {}
 
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
         val item = getItem(position)

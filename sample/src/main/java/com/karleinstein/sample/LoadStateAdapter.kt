@@ -2,7 +2,6 @@ package com.karleinstein.sample
 
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ProgressBar
@@ -11,8 +10,6 @@ import androidx.core.view.isVisible
 import androidx.paging.LoadState
 import androidx.paging.LoadStateAdapter
 import com.karleinstein.karlrecy.BaseViewHolder
-import com.karleinstein.karlrecy.R
-import com.karleinstein.karlrecy.RecyclerAdapterListener
 
 class LoadStateAdapter : LoadStateAdapter<BaseViewHolder>() {
 
@@ -25,7 +22,8 @@ class LoadStateAdapter : LoadStateAdapter<BaseViewHolder>() {
             is LoadState.Error -> {
                 errorMsg.text = loadState.error.localizedMessage
             }
-            else -> {}
+            else -> {
+            }
         }
         progressBar.isVisible = loadState is LoadState.Loading
         retryButton.isVisible = loadState !is LoadState.Loading

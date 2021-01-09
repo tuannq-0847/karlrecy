@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package com.example.android.codelabs.paging.data
+package com.karleinstein.sample.data
 
+import android.util.Log
 import androidx.paging.PagingSource
 import com.example.android.codelabs.paging.api.GithubService
 import com.example.android.codelabs.paging.api.IN_QUALIFIER
-import com.example.android.codelabs.paging.model.Repo
+import com.karleinstein.sample.model.Repo
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -36,6 +37,7 @@ class GithubPagingSource(
         return try {
             val response = service.searchRepos(apiQuery, position, params.loadSize)
             val repos = response.items
+            Log.d("GithubPagingSource", "load: $repos")
             LoadResult.Page(
                     data = repos,
                     prevKey = if (position == GITHUB_STARTING_PAGE_INDEX) null else position - 1,

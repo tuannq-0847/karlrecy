@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.android.codelabs.paging.model
+package com.karleinstein.sample.model
 
 import com.google.gson.annotations.SerializedName
 

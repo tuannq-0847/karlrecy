@@ -18,7 +18,7 @@ package com.karleinstein.sample.injection
 
 import androidx.lifecycle.ViewModelProvider
 import com.example.android.codelabs.paging.api.GithubService
-import com.example.android.codelabs.paging.data.GithubRepository
+import com.karleinstein.sample.data.GithubRepository
 
 /**
  * Class that handles object creation.
