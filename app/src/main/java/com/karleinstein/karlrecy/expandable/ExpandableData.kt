@@ -1,6 +1,6 @@
 @file:Suppress("UNCHECKED_CAST")
 
-package com.karleinstein.karlrecy
+package com.karleinstein.karlrecy.expandable
 
 class ExpandableData<G, C: Any>(
     val groupItem: GroupItem<G>,

@@ -7,7 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.karleinstein.karlrecy.*
+import com.karleinstein.karlrecy.expandable.*
+import com.karleinstein.sample.ExpandableDataSample
 import com.karleinstein.sample.R
 
 class ExpandableFragment : Fragment() {
@@ -65,7 +66,7 @@ class ExpandableFragment : Fragment() {
                     groupItem = GroupItem("Mixed Type"),
                     childItems = *arrayOf(
                         ChildItem(
-                            com.karleinstein.sample.ExpandableDataSample(
+                            ExpandableDataSample(
                                 "Manchester United",
                                 R.drawable.mu
                             )
@@ -75,14 +76,14 @@ class ExpandableFragment : Fragment() {
                 ),
                 ExpandableData(
                     groupItem = GroupItem(
-                        com.karleinstein.sample.ExpandableDataSample(
+                        ExpandableDataSample(
                             "Mixed Type Section",
                             R.drawable.car5
                         )
                     ),
                     childItems = *arrayOf(
                         ChildItem(
-                            com.karleinstein.sample.ExpandableDataSample(
+                            ExpandableDataSample(
                                 "My Car",
                                 R.drawable.car6
                             )

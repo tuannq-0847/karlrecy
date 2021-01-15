@@ -5,6 +5,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import com.karleinstein.karlrecy.*
+import com.karleinstein.karlrecy.expandable.BaseExpandRecyclerAdapter
+import com.karleinstein.karlrecy.expandable.ChildItem
+import com.karleinstein.karlrecy.expandable.ExpandableItem
+import com.karleinstein.karlrecy.expandable.GroupItem
 
 class ExpandableListAdapter(callback: DiffUtil.ItemCallback<ExpandableItem>) :
     BaseExpandRecyclerAdapter<Any, Any>(callback) {

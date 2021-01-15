@@ -1,11 +1,14 @@
-package com.karleinstein.karlrecy
+package com.karleinstein.karlrecy.expandable
 
 import android.view.View
 import androidx.recyclerview.widget.DiffUtil
+import com.karleinstein.karlrecy.*
+import com.karleinstein.karlrecy.RecyclerAdapterListener
 
 abstract class BaseExpandRecyclerAdapter<G : Any, C : Any>(
     callback: DiffUtil.ItemCallback<ExpandableItem> = BaseDiffUtil()
-) : BaseRecyclerAdapter<ExpandableItem>(callback), RecyclerAdapterListener<ExpandableItem> {
+) : BaseRecyclerAdapter<ExpandableItem>(callback),
+    RecyclerAdapterListener<ExpandableItem> {
 
     override fun bindFirstTime(baseViewHolder: BaseViewHolder) {
         baseViewHolder.itemView.setOnClickListener {
