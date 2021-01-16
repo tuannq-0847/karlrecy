@@ -60,19 +60,6 @@ class ExpandableFragment : Fragment() {
                         ChildItem(R.drawable.juvetus),
                         ChildItem(R.drawable.barcelona)
                     )
-                )
-                ,
-                ExpandableData(
-                    groupItem = GroupItem("Mixed Type"),
-                    childItems = *arrayOf(
-                        ChildItem(
-                            ExpandableDataSample(
-                                "Manchester United",
-                                R.drawable.mu
-                            )
-                        ),
-                        ChildItem("Coding")
-                    )
                 ),
                 ExpandableData(
                     groupItem = GroupItem(

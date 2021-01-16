@@ -76,14 +76,6 @@ object ExpandableDiffUtil {
     }
 
     fun areContentTheSame(oldData: ExpandableItem, newData: ExpandableItem): Boolean {
-        return when {
-            oldData is ChildItem<*> && newData is ChildItem<*> -> {
-                oldData == newData
-            }
-            oldData is GroupItem<*> && newData is GroupItem<*> -> {
-                oldData == newData
-            }
-            else -> false
-        }
+        return oldData == newData
     }
 }
