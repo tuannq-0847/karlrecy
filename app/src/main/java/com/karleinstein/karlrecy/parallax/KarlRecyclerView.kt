@@ -15,18 +15,29 @@ import androidx.recyclerview.widget.RecyclerView
 
 @SuppressLint("ClickableViewAccessibility")
 class KarlRecyclerView(context: Context, attrs: AttributeSet?) : RecyclerView(context, attrs) {
-    private var firstTouchY = 0F
-    private var nextTouchY = 0F
+    private var touchList = mutableListOf<Float>()
     private var isEnableScroll = true
-    var isEnableParallax: Boolean = true
+    var isEnableOverScroll: Boolean = true
 
     override fun onScrolled(dx: Int, dy: Int) {
         super.onScrolled(dx, dy)
-        Log.d("onScrolled", "dx: $dx dy: $dy")
-        this.setOnTouchListener { v, event ->
-            if (isEnableParallax && isEnableOverScrollTop(event.rawY) == true) {
-                isEnableScroll = false
-                animateParallax(v, event)
+        this.setOnTouchListener { _, event ->
+            if (isEnableOverScroll) {
+                val stateOverScroll = try {
+                    handleOverScrollState(event.rawY)
+                } catch (ex: IndexOutOfBoundsException) {
+                    isEnableScroll = true
+                    ex.printStackTrace()
+                    StateOverScroll.NONE
+                }
+                if (stateOverScroll == StateOverScroll.OVER_SCROLL_TOP) {
+                    isEnableScroll = false
+                    animateOverScroll(event)
+                }
+                if (stateOverScroll == StateOverScroll.OVER_SCROLL_BOT) {
+                    isEnableScroll = false
+                    animateOverScroll(event)
+                }
             }
             return@setOnTouchListener false
         }
@@ -35,32 +46,27 @@ class KarlRecyclerView(context: Context, attrs: AttributeSet?) : RecyclerView(co
     init {
         val linearLayoutManager = object : LinearLayoutManager(context) {
             override fun canScrollVertically(): Boolean {
+                Log.d("linearLayoutManager", "canScrollVertically: $isEnableScroll")
                 return isEnableScroll
             }
         }
         layoutManager = linearLayoutManager
     }
 
-    override fun onScrollStateChanged(state: Int) {
-        super.onScrollStateChanged(state)
-        Log.d("onScrollStateChanged", "onScrollStateChanged: state: $state")
-    }
-
-    private fun animateParallax(view: View, event: MotionEvent) {
+    private fun animateOverScroll(event: MotionEvent) {
 
         if (event.action == ACTION_MOVE) {
             if (isInside(event)) {
-                scrollToPosition(0)
-                translationY = event.rawY / 2
+                translationY = touchList[1] - touchList[0]
             } else {
                 isEnableScroll = true
-                handleAnimate(event.rawY / 2)
+                handleAnimate(touchList[1] - touchList[0])
+                touchList.clear()
             }
         }
         if (event.action == ACTION_UP) {
-            handleAnimate(event.rawY / 2)
-            firstTouchY = 0F
-            nextTouchY = 0F
+            handleAnimate(touchList[1] - touchList[0])
+            touchList.clear()
             isEnableScroll = true
             this.translationY = 0F
         }
@@ -69,8 +75,19 @@ class KarlRecyclerView(context: Context, attrs: AttributeSet?) : RecyclerView(co
     private fun isVisibleFirstPosition(): Boolean {
         if (layoutManager is LinearLayoutManager) {
             val firstVisiblePosition =
-                (layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
+                (layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
+            isEnableScroll = true
             return firstVisiblePosition == 0
+        } else throw Exception("Only support Linear Layout Manager....")
+    }
+
+    private fun isVisibleLastPosition(): Boolean {
+        if (layoutManager is LinearLayoutManager) {
+            val lastCompletelyVisibleItemPosition =
+                (layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition()
+            Log.d("lastCompletely", "isVisibleLastPosition: $lastCompletelyVisibleItemPosition")
+            isEnableScroll = true
+            return lastCompletelyVisibleItemPosition == adapter?.itemCount?.minus(1)
         } else throw Exception("Only support Linear Layout Manager....")
     }
 
@@ -80,29 +97,37 @@ class KarlRecyclerView(context: Context, attrs: AttributeSet?) : RecyclerView(co
                 || e.y > this.measuredHeight)
     }
 
-    private fun isEnableOverScrollTop(rawY: Float): Boolean? {
-        if (firstTouchY == 0F) {
-            firstTouchY = rawY
-            isEnableScroll = true
-            return null
-        }
-        if (firstTouchY != nextTouchY && nextTouchY == 0F) nextTouchY = rawY
-        val isVisible = isVisibleFirstPosition()
-        Log.d("isVisible", "isEnableOverScrollTop: $isVisible")
-        Log.d("firstTouchY", "firstTouchY: $firstTouchY nextTouchY: $nextTouchY")
-        return if ((firstTouchY < nextTouchY) && isVisible) {
-            true
+    private fun handleOverScrollState(rawY: Float): StateOverScroll? {
+        handleTouchOverScroll(rawY)
+        val isFirstPositionVisible = isVisibleFirstPosition()
+        val isLastPositionVisible = isVisibleLastPosition()
+        Log.d("KarlRecycler", "handleOverScrollState: $touchList")
+        return if ((touchList[0] < touchList[1]) && isFirstPositionVisible) {
+
+            StateOverScroll.OVER_SCROLL_TOP
+        } else if ((touchList[0] > touchList[1]) && isLastPositionVisible) {
+            StateOverScroll.OVER_SCROLL_BOT
         } else {
-            firstTouchY = 0F
-            nextTouchY = 0F
-            false
+            StateOverScroll.NONE
+        }
+    }
+
+    private fun handleTouchOverScroll(rawY: Float) {
+        if (touchList.firstOrNull() == null) {
+            touchList.add(0, rawY)
+            return
+        }
+        if (touchList.size < 2)
+            touchList.add(1, rawY)
+        else {
+            touchList.removeAt(1)
+            touchList.add(rawY)
         }
     }
 
     private fun handleAnimate(height: Float) {
         ObjectAnimator.ofFloat(height, 0F).apply {
             addUpdateListener {
-                Log.d("KarlRecyclerViewAz", "animatedValue: ${it.animatedValue as Float}")
                 this@KarlRecyclerView.translationY = it.animatedValue as Float
             }
             addListener(object : Animator.AnimatorListener {
@@ -112,21 +137,24 @@ class KarlRecyclerView(context: Context, attrs: AttributeSet?) : RecyclerView(co
 
                 override fun onAnimationEnd(animation: Animator?) {
                     isEnableScroll = true
-                    firstTouchY = 0F
-                    nextTouchY = 0F
+                    touchList.clear()
                 }
 
                 override fun onAnimationCancel(animation: Animator?) {
 
                 }
 
-                override fun onAnimationStart(animation: Animator?) {
-
-                }
-
+                override fun onAnimationStart(animation: Animator?) {}
             })
             duration = 1000
             start()
         }
     }
 }
+
+private enum class StateOverScroll {
+    OVER_SCROLL_TOP,
+    OVER_SCROLL_BOT,
+    NONE
+}
+

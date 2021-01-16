@@ -26,7 +26,7 @@ class ExpandableListAdapter(callback: DiffUtil.ItemCallback<ExpandableItem>) :
             }
             is GroupItem<*> -> {
                 when {
-                    checkType<com.karleinstein.sample.ExpandableDataSample>(item.input!!) -> R.layout.item_group_mix_text_image
+                    checkType<ExpandableDataSample>(item.input!!) -> R.layout.item_group_mix_text_image
                     else -> R.layout.item_group
                 }
             }
@@ -44,7 +44,7 @@ class ExpandableListAdapter(callback: DiffUtil.ItemCallback<ExpandableItem>) :
     }
 
     override fun onBindGroup(itemView: View, item: Any?) {
-        if (item is com.karleinstein.sample.ExpandableDataSample) {
+        if (item is ExpandableDataSample) {
             val textExpandable = itemView.findViewById<TextView?>(R.id.text_title)
             val imageExpandable = itemView.findViewById<ImageView?>(R.id.image_car)
             textExpandable?.text = item.title
@@ -60,7 +60,7 @@ class ExpandableListAdapter(callback: DiffUtil.ItemCallback<ExpandableItem>) :
     override fun onBindChild(itemView: View, item: Any?) {
         item?.let {
             when (it) {
-                is com.karleinstein.sample.ExpandableDataSample -> {
+                is ExpandableDataSample -> {
                     val textExpandable = itemView.findViewById<TextView?>(R.id.text_expandable)
                     val imageExpandable = itemView.findViewById<ImageView?>(R.id.image_expandable)
                     textExpandable?.text = it.title
