@@ -1,17 +1,41 @@
 package com.karleinstein.sample.expandable
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.karleinstein.karlrecy.expandable.*
-import com.karleinstein.sample.ExpandableDataSample
+import com.karleinstein.karlrecy.expandable.ExpandableDiffUtil
+import com.karleinstein.karlrecy.expandable.ExpandableItem
 import com.karleinstein.sample.R
+import com.karleinstein.sample.utils.GenerateData
 
 class ExpandableFragment : Fragment() {
+
+    var recyclerView: RecyclerView? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
+    val adapter = com.karleinstein.sample.ExpandableListAdapter(object :
+        DiffUtil.ItemCallback<ExpandableItem>() {
+        override fun areItemsTheSame(
+            oldItem: ExpandableItem,
+            newItem: ExpandableItem
+        ): Boolean {
+            return ExpandableDiffUtil.areItemsTheSame(oldItem, newItem)
+        }
+
+        override fun areContentsTheSame(
+            oldItem: ExpandableItem,
+            newItem: ExpandableItem
+        ): Boolean {
+            return ExpandableDiffUtil.areContentTheSame(oldItem, newItem)
+        }
+
+    })
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -23,65 +47,31 @@ class ExpandableFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        recyclerView = view.findViewById(R.id.recycle)
+        adapter.register(GenerateData.expandableData)
+        recyclerView?.adapter = adapter
+    }
 
-        val adapter = com.karleinstein.sample.ExpandableListAdapter(object :
-            DiffUtil.ItemCallback<ExpandableItem>() {
-            override fun areItemsTheSame(
-                oldItem: ExpandableItem,
-                newItem: ExpandableItem
-            ): Boolean {
-                return ExpandableDiffUtil.areItemsTheSame(oldItem, newItem)
-            }
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.layout_add_remove_menu, menu)
+    }
 
-            override fun areContentsTheSame(
-                oldItem: ExpandableItem,
-                newItem: ExpandableItem
-            ): Boolean {
-                return ExpandableDiffUtil.areContentTheSame(oldItem, newItem)
-            }
-
-        })
-        val expandableData =
-            listOf(
-                ExpandableData(
-                    groupItem = GroupItem("Text Type"),
-                    childItems = *arrayOf(
-                        ChildItem("Kotlin"),
-                        ChildItem("PHP"),
-                        ChildItem("C/C++"),
-                        ChildItem("Swift"),
-                        ChildItem("Javascript")
-                    )
-                ),
-                ExpandableData(
-                    groupItem = GroupItem("Image Type"),
-                    childItems = *arrayOf(
-                        ChildItem(R.drawable.ac_milan),
-                        ChildItem(R.drawable.juvetus),
-                        ChildItem(R.drawable.barcelona)
-                    )
-                ),
-                ExpandableData(
-                    groupItem = GroupItem(
-                        ExpandableDataSample(
-                            "Mixed Type Section",
-                            R.drawable.car5
-                        )
-                    ),
-                    childItems = *arrayOf(
-                        ChildItem(
-                            ExpandableDataSample(
-                                "My Car",
-                                R.drawable.car6
-                            )
-                        ),
-                        ChildItem("Coding")
-                    )
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.item_add -> {
+                GenerateData.addNewRandomExpandableItem()
+                adapter.register(
+                    GenerateData.expandableData
                 )
-            )
-        adapter.register(expandableData)
-        view.findViewById<RecyclerView>(R.id.recycle).run {
-            this.adapter = adapter
+                return true
+            }
+            R.id.item_del -> {
+                GenerateData.delNewRandomExpandableItem()
+                adapter.register(GenerateData.expandableData)
+                return true
+            }
         }
+        return super.onOptionsItemSelected(item)
     }
 }

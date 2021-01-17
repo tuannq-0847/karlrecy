@@ -12,14 +12,14 @@ abstract class BaseExpandRecyclerAdapter<G : Any, C : Any>(
 
     override fun bindFirstTime(baseViewHolder: BaseViewHolder) {
         baseViewHolder.itemView.setOnClickListener {
-            val a = getItem(baseViewHolder.absoluteAdapterPosition)
-            if (a is GroupItem<*>){
-                a.isExpand = !a.isExpand
-                isExpandedListener(baseViewHolder, a.isExpand)
+            val item = getItem(baseViewHolder.absoluteAdapterPosition)
+            if (item is GroupItem<*>){
+                item.isExpand = !item.isExpand
+                isExpandedListener(baseViewHolder, item.isExpand)
                 submitList(
                     dataRaw.setStateChildView(
                         stateClickedHandler(
-                            a.isExpand,
+                            item.isExpand,
                             baseViewHolder.absoluteAdapterPosition
                         ),
                         baseViewHolder.absoluteAdapterPosition
