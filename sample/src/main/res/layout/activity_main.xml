@@ -7,7 +7,7 @@
     android:background="@color/white"
     tools:context=".MainActivity">
 
-    <com.karleinstein.karlrecy.parallax.KarlRecyclerView
+    <com.karleinstein.karlrecy.overscroll.KarlRecyclerView
         android:id="@+id/recycle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -43,6 +43,7 @@ class PagingRecyclerFragment : Fragment() {
             }
 
         }
+        pagingAdapter
 
         view.findViewById<RecyclerView>(R.id.recycle).run {
             lifecycleScope.launch {
@@ -57,7 +58,7 @@ class PagingRecyclerFragment : Fragment() {
         }
     }
 
-    private suspend fun a(): Flow<PagingData<Repo>> {
+    private fun a(): Flow<PagingData<Repo>> {
         val repository = Injection.provideViewModelFactory()
         return repository.getSearchResultStream("Android").cachedIn(lifecycleScope)
     }

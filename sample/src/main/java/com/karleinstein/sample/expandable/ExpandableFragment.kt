@@ -35,7 +35,7 @@ class ExpandableFragment : Fragment() {
             return ExpandableDiffUtil.areContentTheSame(oldItem, newItem)
         }
 
-    })
+    }, swipeForOptionsLayout = R.layout.layout_test)
 
     override fun onCreateView(
         inflater: LayoutInflater,
