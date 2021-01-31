@@ -3,7 +3,7 @@ package com.karleinstein.karlrecy.expandable
 import android.view.View
 import androidx.recyclerview.widget.DiffUtil
 import com.karleinstein.karlrecy.*
-import com.karleinstein.karlrecy.RecyclerAdapterListener
+import com.karleinstein.karlrecy.listener.RecyclerAdapterListener
 
 abstract class BaseExpandRecyclerAdapter<G : Any, C : Any>(
     callback: DiffUtil.ItemCallback<ExpandableItem> = BaseDiffUtil()

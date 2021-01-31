@@ -4,10 +4,12 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.AsyncDifferConfig
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.karleinstein.karlrecy.listener.RecyclerAdapterListener
 import java.util.concurrent.Executors
 
 abstract class BaseRecyclerAdapter<Item : Any>(
@@ -33,6 +35,10 @@ abstract class BaseRecyclerAdapter<Item : Any>(
                     states[it] = false
                 }
             }
+    }
+
+    fun setSwipeForOptionsLayout(@LayoutRes swipeForOptionsLayout: Int) {
+
     }
 
     override fun bindFirstTime(baseViewHolder: BaseViewHolder) {}

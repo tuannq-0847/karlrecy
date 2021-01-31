@@ -1,6 +1,7 @@
-package com.karleinstein.karlrecy
+package com.karleinstein.karlrecy.listener
 
 import androidx.annotation.LayoutRes
+import com.karleinstein.karlrecy.BaseViewHolder
 
 internal interface RecyclerAdapterListener<Item> {
 
@@ -11,3 +12,4 @@ internal interface RecyclerAdapterListener<Item> {
 
     fun bindFirstTime(baseViewHolder: BaseViewHolder)
 }
+
