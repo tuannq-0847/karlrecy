@@ -23,14 +23,14 @@ fun <G> GroupItem<*>.toGroupData() = input as? G
 fun List<ExpandableItem>.setStateChildView(
     isExpand: Boolean,
     position: Int
-): List<ExpandableItem> {
+): MutableList<ExpandableItem>? {
     val current = this[position]
     if (current is GroupItem<*>)
         current.isExpand = isExpand
     return getData(this)
 }
 
-fun <G : Any, C : Any> List<ExpandableData<out G, out C>>.initList(): List<ExpandableItem> {
+fun <G : Any, C : Any> List<ExpandableData<out G, out C>>.initList(): MutableList<ExpandableItem> {
     val res = mutableListOf<ExpandableItem>()
     map {
         it.groupItem.isExpand = false
@@ -40,7 +40,7 @@ fun <G : Any, C : Any> List<ExpandableData<out G, out C>>.initList(): List<Expan
     return res
 }
 
-fun getData(currentList: List<ExpandableItem>): List<ExpandableItem> {
+fun getData(currentList: List<ExpandableItem>): MutableList<ExpandableItem>? {
     val result = mutableListOf<ExpandableItem>()
     currentList.forEachIndexed { index, expandableItem ->
         var flexibleIndex = index

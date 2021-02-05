@@ -47,6 +47,15 @@ object GenerateData {
             )
         )
 
+    fun getSelectionData(): MutableList<String> {
+        val size = 200
+        val data = mutableListOf<String>()
+        for (i in 0 until size) {
+            data.add("Test: $i")
+        }
+        return data
+    }
+
     fun addNewRandomExpandableItem() {
         val intRandom = (0..10).random()
         if (intRandom % 2 == 0)

@@ -48,7 +48,7 @@ class ExpandableFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         recyclerView = view.findViewById(R.id.recycle)
-        adapter.register(GenerateData.expandableData)
+        adapter.registerExpandable(GenerateData.expandableData)
         recyclerView?.adapter = adapter
     }
 
@@ -61,14 +61,14 @@ class ExpandableFragment : Fragment() {
         when (item.itemId) {
             R.id.item_add -> {
                 GenerateData.addNewRandomExpandableItem()
-                adapter.register(
+                adapter.registerExpandable(
                     GenerateData.expandableData
                 )
                 return true
             }
             R.id.item_del -> {
                 GenerateData.delNewRandomExpandableItem()
-                adapter.register(GenerateData.expandableData)
+                adapter.registerExpandable(GenerateData.expandableData)
                 return true
             }
         }

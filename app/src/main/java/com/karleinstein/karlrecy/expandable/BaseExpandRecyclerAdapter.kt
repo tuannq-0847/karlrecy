@@ -2,7 +2,9 @@ package com.karleinstein.karlrecy.expandable
 
 import android.view.View
 import androidx.recyclerview.widget.DiffUtil
-import com.karleinstein.karlrecy.*
+import com.karleinstein.karlrecy.BaseDiffUtil
+import com.karleinstein.karlrecy.BaseRecyclerAdapter
+import com.karleinstein.karlrecy.BaseViewHolder
 import com.karleinstein.karlrecy.listener.RecyclerAdapterListener
 
 abstract class BaseExpandRecyclerAdapter<G : Any, C : Any>(
@@ -13,7 +15,7 @@ abstract class BaseExpandRecyclerAdapter<G : Any, C : Any>(
     override fun bindFirstTime(baseViewHolder: BaseViewHolder) {
         baseViewHolder.itemView.setOnClickListener {
             val item = getItem(baseViewHolder.absoluteAdapterPosition)
-            if (item is GroupItem<*>){
+            if (item is GroupItem<*>) {
                 item.isExpand = !item.isExpand
                 isExpandedListener(baseViewHolder, item.isExpand)
                 submitList(
@@ -29,11 +31,11 @@ abstract class BaseExpandRecyclerAdapter<G : Any, C : Any>(
         }
     }
 
-    open fun isExpandedListener(baseViewHolder: BaseViewHolder, isExpanded: Boolean){
+    open fun isExpandedListener(baseViewHolder: BaseViewHolder, isExpanded: Boolean) {
 
     }
 
-    fun register(data: List<ExpandableData<out G, out C>>) {
+    fun registerExpandable(data: List<ExpandableData<out G, out C>>) {
         dataRaw = data.initList()
         submitList(getData(dataRaw))
     }

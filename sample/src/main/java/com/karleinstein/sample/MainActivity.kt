@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.Button
 import com.karleinstein.sample.expandable.ExpandableFragment
 import com.karleinstein.sample.paging.PagingRecyclerFragment
+import com.karleinstein.sample.selection.SelectionFragment
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -40,7 +41,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     .commit()
             }
             R.id.button3 -> {
-
+                supportFragmentManager.beginTransaction()
+                    .add(R.id.main_container, SelectionFragment())
+                    .addToBackStack(null)
+                    .commit()
             }
         }
     }
