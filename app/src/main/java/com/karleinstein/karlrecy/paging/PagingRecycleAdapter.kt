@@ -6,7 +6,7 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import com.karleinstein.karlrecy.BaseDiffUtil
 import com.karleinstein.karlrecy.BaseViewHolder
-import com.karleinstein.karlrecy.RecyclerAdapterListener
+import com.karleinstein.karlrecy.listener.RecyclerAdapterListener
 
 abstract class PagingRecycleAdapter<Item : Any>(
     diffCallback: DiffUtil.ItemCallback<Item> = BaseDiffUtil()
@@ -23,7 +23,8 @@ abstract class PagingRecycleAdapter<Item : Any>(
         return BaseViewHolder(
             LayoutInflater.from(
                 parent.context
-            ).inflate(viewType, parent, false)
+            ).inflate(viewType, parent, false),
+            parent
         ).apply { bindFirstTime(this) }
     }
 

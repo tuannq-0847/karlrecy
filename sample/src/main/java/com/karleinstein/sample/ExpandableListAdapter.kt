@@ -3,15 +3,21 @@ package com.karleinstein.sample
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.DiffUtil
-import com.karleinstein.karlrecy.*
+import com.karleinstein.karlrecy.BaseViewHolder
 import com.karleinstein.karlrecy.expandable.BaseExpandRecyclerAdapter
 import com.karleinstein.karlrecy.expandable.ChildItem
 import com.karleinstein.karlrecy.expandable.ExpandableItem
 import com.karleinstein.karlrecy.expandable.GroupItem
 
-class ExpandableListAdapter(callback: DiffUtil.ItemCallback<ExpandableItem>) :
-    BaseExpandRecyclerAdapter<Any, Any>(callback) {
+class ExpandableListAdapter(
+    callback: DiffUtil.ItemCallback<ExpandableItem>,
+    @LayoutRes swipeForOptionsLayout: Int? = null
+) : BaseExpandRecyclerAdapter<Any, Any>(
+    callback,
+    swipeForOptionsLayout = swipeForOptionsLayout
+) {
 
     override fun buildLayoutRes(position: Int): Int {
         return when (val item = currentList[position]) {

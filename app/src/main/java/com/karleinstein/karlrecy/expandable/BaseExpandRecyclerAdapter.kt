@@ -1,25 +1,29 @@
 package com.karleinstein.karlrecy.expandable
 
 import android.view.View
+import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.DiffUtil
-import com.karleinstein.karlrecy.*
-import com.karleinstein.karlrecy.RecyclerAdapterListener
+import com.karleinstein.karlrecy.BaseDiffUtil
+import com.karleinstein.karlrecy.BaseRecyclerAdapter
+import com.karleinstein.karlrecy.BaseViewHolder
+import com.karleinstein.karlrecy.listener.RecyclerAdapterListener
 
 abstract class BaseExpandRecyclerAdapter<G : Any, C : Any>(
-    callback: DiffUtil.ItemCallback<ExpandableItem> = BaseDiffUtil()
-) : BaseRecyclerAdapter<ExpandableItem>(callback),
+    callback: DiffUtil.ItemCallback<ExpandableItem> = BaseDiffUtil(),
+    @LayoutRes swipeForOptionsLayout: Int? = null
+) : BaseRecyclerAdapter<ExpandableItem>(callback, swipeForOptionsLayout = swipeForOptionsLayout),
     RecyclerAdapterListener<ExpandableItem> {
 
     override fun bindFirstTime(baseViewHolder: BaseViewHolder) {
         baseViewHolder.itemView.setOnClickListener {
-            val a = getItem(baseViewHolder.absoluteAdapterPosition)
-            if (a is GroupItem<*>){
-                a.isExpand = !a.isExpand
-                isExpandedListener(baseViewHolder, a.isExpand)
+            val item = getItem(baseViewHolder.absoluteAdapterPosition)
+            if (item is GroupItem<*>) {
+                item.isExpand = !item.isExpand
+                isExpandedListener(baseViewHolder, item.isExpand)
                 submitList(
                     dataRaw.setStateChildView(
                         stateClickedHandler(
-                            a.isExpand,
+                            item.isExpand,
                             baseViewHolder.absoluteAdapterPosition
                         ),
                         baseViewHolder.absoluteAdapterPosition
@@ -29,7 +33,7 @@ abstract class BaseExpandRecyclerAdapter<G : Any, C : Any>(
         }
     }
 
-    open fun isExpandedListener(baseViewHolder: BaseViewHolder, isExpanded: Boolean){
+    open fun isExpandedListener(baseViewHolder: BaseViewHolder, isExpanded: Boolean) {
 
     }
 

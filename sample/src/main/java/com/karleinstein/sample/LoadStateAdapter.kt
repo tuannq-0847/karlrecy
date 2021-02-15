@@ -33,7 +33,8 @@ class LoadStateAdapter : LoadStateAdapter<BaseViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, loadState: LoadState): BaseViewHolder {
         return BaseViewHolder(
             LayoutInflater.from(parent.context)
-                .inflate(R.layout.repos_load_state_footer_view_item, parent, false)
+                .inflate(R.layout.repos_load_state_footer_view_item, parent, false),
+            parent
         )
     }
 }

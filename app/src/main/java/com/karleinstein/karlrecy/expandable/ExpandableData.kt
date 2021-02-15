@@ -2,7 +2,7 @@
 
 package com.karleinstein.karlrecy.expandable
 
-class ExpandableData<G, C: Any>(
+class ExpandableData<G, C : Any>(
     val groupItem: GroupItem<G>,
     vararg val childItems: ChildItem<out C>
 )
@@ -30,7 +30,7 @@ fun List<ExpandableItem>.setStateChildView(
     return getData(this)
 }
 
-fun <G: Any, C : Any> List<ExpandableData<out G, out C>>.initList(): List<ExpandableItem> {
+fun <G : Any, C : Any> List<ExpandableData<out G, out C>>.initList(): List<ExpandableItem> {
     val res = mutableListOf<ExpandableItem>()
     map {
         it.groupItem.isExpand = false
@@ -43,19 +43,17 @@ fun <G: Any, C : Any> List<ExpandableData<out G, out C>>.initList(): List<Expand
 fun getData(currentList: List<ExpandableItem>): List<ExpandableItem> {
     val result = mutableListOf<ExpandableItem>()
     currentList.forEachIndexed { index, expandableItem ->
-        run {
-            var p = index
-            if (expandableItem is GroupItem<*>) {
-                result.add(expandableItem)
-                if (expandableItem.isExpand) {
-                    p++
-                    while (p < currentList.size && currentList[p] is ChildItem<*>) {
-                        result.add(currentList[p])
-                        p++
-                    }
+        var flexibleIndex = index
+        if (expandableItem is GroupItem<*>) {
+            result.add(expandableItem)
+            if (expandableItem.isExpand) {
+                flexibleIndex++
+                while (flexibleIndex < currentList.size && currentList[flexibleIndex] is ChildItem<*>) {
+                    result.add(currentList[flexibleIndex])
+                    flexibleIndex++
                 }
-
             }
+
         }
     }
     return result
