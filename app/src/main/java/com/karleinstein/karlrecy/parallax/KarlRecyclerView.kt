@@ -14,34 +14,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 @SuppressLint("ClickableViewAccessibility")
-class KarlRecyclerView(context: Context, attrs: AttributeSet?) : RecyclerView(context, attrs) {
+class KarlRecyclerView(context: Context, attrs: AttributeSet?) : RecyclerView(context, attrs),View.OnTouchListener {
     private var touchList = mutableListOf<Float>()
     private var isEnableScroll = true
     var isEnableOverScroll: Boolean = true
-
-    override fun onScrolled(dx: Int, dy: Int) {
-        super.onScrolled(dx, dy)
-        this.setOnTouchListener { _, event ->
-            if (isEnableOverScroll) {
-                val stateOverScroll = try {
-                    handleOverScrollState(event.rawY)
-                } catch (ex: IndexOutOfBoundsException) {
-                    isEnableScroll = true
-                    ex.printStackTrace()
-                    StateOverScroll.NONE
-                }
-                if (stateOverScroll == StateOverScroll.OVER_SCROLL_TOP) {
-                    isEnableScroll = false
-                    animateOverScroll(event)
-                }
-                if (stateOverScroll == StateOverScroll.OVER_SCROLL_BOT) {
-                    isEnableScroll = false
-                    animateOverScroll(event)
-                }
-            }
-            return@setOnTouchListener false
-        }
-    }
 
     init {
         val linearLayoutManager = object : LinearLayoutManager(context) {
@@ -51,6 +27,7 @@ class KarlRecyclerView(context: Context, attrs: AttributeSet?) : RecyclerView(co
             }
         }
         layoutManager = linearLayoutManager
+        setOnTouchListener(this)
     }
 
     private fun animateOverScroll(event: MotionEvent) {
@@ -59,12 +36,14 @@ class KarlRecyclerView(context: Context, attrs: AttributeSet?) : RecyclerView(co
             if (isInside(event)) {
                 translationY = touchList[1] - touchList[0]
             } else {
+                setOnTouchListener(null)
                 isEnableScroll = true
                 handleAnimate(touchList[1] - touchList[0])
                 touchList.clear()
             }
         }
         if (event.action == ACTION_UP) {
+            setOnTouchListener(null)
             handleAnimate(touchList[1] - touchList[0])
             touchList.clear()
             isEnableScroll = true
@@ -138,6 +117,7 @@ class KarlRecyclerView(context: Context, attrs: AttributeSet?) : RecyclerView(co
                 override fun onAnimationEnd(animation: Animator?) {
                     isEnableScroll = true
                     touchList.clear()
+                    setOnTouchListener(this@KarlRecyclerView)
                 }
 
                 override fun onAnimationCancel(animation: Animator?) {
@@ -149,6 +129,27 @@ class KarlRecyclerView(context: Context, attrs: AttributeSet?) : RecyclerView(co
             duration = 1000
             start()
         }
+    }
+
+    override fun onTouch(p0: View?, event: MotionEvent): Boolean {
+        if (isEnableOverScroll) {
+            val stateOverScroll = try {
+                handleOverScrollState(event.rawY)
+            } catch (ex: IndexOutOfBoundsException) {
+                isEnableScroll = true
+                ex.printStackTrace()
+                StateOverScroll.NONE
+            }
+            if (stateOverScroll == StateOverScroll.OVER_SCROLL_TOP) {
+                isEnableScroll = false
+                animateOverScroll(event)
+            }
+            if (stateOverScroll == StateOverScroll.OVER_SCROLL_BOT) {
+                isEnableScroll = false
+                animateOverScroll(event)
+            }
+        }
+        return false
     }
 }
 
